@@ -1,7 +1,7 @@
 # Python-bot-translate
 
-Search in Telegram BotTranslateFromMe
+Search in Telegram BotTranslateAiogram
 
 In description commands for working with bot
 
-Bot can traslate from RU to EN
+Bot can translate to 107 languages
