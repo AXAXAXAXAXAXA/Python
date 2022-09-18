@@ -1,6 +1,6 @@
 # Python-bot-translate
 
-Search in Telegram BotTranslateAiogram
+Look for in Telegram BotTranslateAiogram
 
 In description commands for working with bot
 
