@@ -1,0 +1,95 @@
+from telethon import functions, types, events, utils
+from telethon import TelegramClient
+from telethon.tl.functions import messages
+from telethon.tl.types import ReplyKeyboardMarkup
+from telethon.tl.custom.message import Message
+from telethon.tl.custom.button import Button
+from telethon.tl.custom.messagebutton import MessageButton
+
+from googletrans import Translator
+from googletrans.client import LANGUAGES
+
+
+#region Свойства
+#endregion
+client = TelegramClient('me', api_id, api_hash)
+#client = TelegramClient('bot3', api_id, api_hash).start(bot_token=bot_token)
+trans = Translator()
+#client.get_me()
+# # @client.on(events.NewMessage(from_users=1287315948))
+# #     #pattern = r"/tttttttttttttt"))
+# # async def ru_en(event):
+# #     result = await client(functions.messages.TranslateTextRequest(
+# #             to_lang='en',
+# #             peer='ne_proger',
+# #             msg_id=event.message.id,
+# #             text='',
+# #             from_lang='ru'
+# #         ))
+    
+# #     print(result)
+# @client.on(events.NewMessage(pattern = r'/tqwe', from_users=1287315948))
+# async def ru_en(event):
+#     us = await client.get_me()
+
+#     await event.reply(str(us))
+#     await event.respond(f'<a href="tg://user?id={event.peer_id}">\\{await client.get_me()}</a>', parse_mode='html')
+
+@client.on(events.NewMessage(pattern = r'/t+\s', from_users=1287315948))
+async def ru_en(event):
+    rw_txt = event.raw_text.lower()
+    trans_rdy = trans.translate(text=rw_txt, dest='en', src='ru')
+    await event.respond(trans_rdy.text[2:len(trans_rdy.text)])
+
+
+@client.on(events.NewMessage(pattern = r'/trans+\s', from_users=1287315948))
+async def transs(event):
+    rw_txt = event.raw_text.lower()
+    _from=rw_txt[7:9]
+    _to=rw_txt[10:12]
+    trans_rdy = trans.translate(text=rw_txt[11:], dest=_to, src=_from)
+    await event.respond(trans_rdy.text[2:len(trans_rdy.text)])
+
+
+
+@client.on(events.NewMessage(pattern = r'/langs', from_users=1287315948))
+async def languages(event):
+    keys   = list(LANGUAGES.keys())
+    values = list(LANGUAGES.values()) 
+    s = ""
+    c = 0
+    for i in keys:
+        s = s + " " + i + " - " + values[c] + ", \n"
+        c+=1
+    await event.respond(s)
+
+
+@client.on(events.NewMessage(pattern = r'/help', from_users=1287315948))
+async def helpa(event):
+    await event.respond("/t - перевод с русского на англ \n" +
+                        "/trans - выбор языков для перевода  \"/trans ru en (с какого на какой) жопа\" \n" +
+                        "/langs - языки \n" +
+                        "/help - помощь")
+
+
+
+# @client.on(events.NewMessage(pattern=r'[^/t]', from_users=1287315948))
+# async def my_event_handler(event):
+#     #print(events.NewMessage.Event.stringify(event))
+#     #print(event.raw_text)
+     
+#     rw_txt = event.raw_text.lower()
+#     try:
+#         if (hasattr(event.message.fwd_from, 'from_id')):
+#             await event.reply(str(event.message.fwd_from.from_id.user_id))
+#         elif (hasattr(event.message.media, 'phone_number')):
+#             await event.reply(str(event.message.media.user_id))
+#         elif True:
+#             text = event.raw_text
+#             id_by_nik = await client.get_peer_id(text)
+#             await event.reply(str(id_by_nik))
+#     except:    
+#         await event.reply("Чё?")
+
+client.start()
+client.run_until_disconnected()
